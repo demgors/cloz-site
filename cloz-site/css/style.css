@@ -95,6 +95,8 @@ a{ color:inherit; text-decoration:none }
   color:var(--text);
 }
 .menu a:hover{ opacity:1; }
+
+/* Лого в стиле CLOZ */
 .logo {
   font-family: "Inter Tight", "Inter", system-ui, sans-serif;
   font-weight: 500;
@@ -206,18 +208,24 @@ a{ color:inherit; text-decoration:none }
   z-index:2;
   padding:clamp(48px,7vw,96px) 0;
 }
-.rm-hero__inner{
-  position:relative;
-  min-height:min(78vh,860px);
-}
-/* ===== Центровка текста в hero ===== */
-/* HERO: центрируем текст, шрифт и масштаб сохраняем */
 
-.rm-hero__meta {
-  position: absolute;
-  top: 35%;          /* ↑↓ — вверх/вниз относительно экрана */
-  left: 72%;         /* ←→ — влево/вправо относительно центра */
-  transform: translate(-50%, -50%);  /* центрирует ровно по середине */
+/* ВАЖНО: новый гибкий layout для hero */
+.rm-hero__inner{
+  position: relative;
+  min-height: min(78vh, 860px);
+  display: flex;
+  align-items: center;       /* центр по вертикали */
+  justify-content: flex-end; /* текст прижат к правой части */
+}
+
+/* Текстовый блок hero — больше не absolute */
+.rm-hero__meta{
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  max-width: 420px;
+  margin-right: 8vw; /* отступ от правого края */
   text-align: center;
 }
 
@@ -229,16 +237,12 @@ a{ color:inherit; text-decoration:none }
   letter-spacing:.01em;
   text-wrap:balance;
   margin:0 0 10px;
-  margin-inline:auto;       /* сам заголовок центрирован в своём блоке */
-  /* без white-space: pre-line — <br> работает как обычно,
-     текст просто центрируется, не "стихом" */
+  margin-inline:auto;
 }
-
-.rm-hero__sub,
-.rm-hero__desc{
-  text-align:center;        /* подзаголовок и описание под заголовком по центру */
-  margin-left:auto;
-  margin-right:auto;
+.rm-hero__sub{
+  margin:0 0 12px;
+  color:rgba(233,226,214,.78);
+  font-size:clamp(15px,1.8vw,17px);
 }
 .rm-hero__desc{
   margin:0 0 24px;
@@ -247,6 +251,8 @@ a{ color:inherit; text-decoration:none }
   font-size:clamp(13px,1.3vw,15px);
   line-height:1.55;
 }
+
+/* Бейдж */
 .rm-hero__badge{
   position:absolute;
   bottom:3.5%;
@@ -320,6 +326,8 @@ a{ color:inherit; text-decoration:none }
   .rm-hero__inner{
     min-height:auto;
     padding-bottom:40px;
+
+    display:block;       /* возвращаем обычный flow */
   }
   .rm-hero__meta{
     position:relative;
@@ -328,6 +336,7 @@ a{ color:inherit; text-decoration:none }
     text-align:left;
     margin-top:24px;
     max-width:100%;
+    margin-right:0;
   }
   .rm-hero__title{
     text-align:left;
@@ -790,5 +799,13 @@ a{ color:inherit; text-decoration:none }
   [data-reveal]{
     transform:translateY(18px);
     transition-duration:.6s;
+  }
+}
+
+/* ===== Очень широкие экраны (чтобы всё не плывало) ===== */
+@media (min-width:1600px){
+  .page{
+    max-width:1500px;
+    margin:0 auto;
   }
 }
