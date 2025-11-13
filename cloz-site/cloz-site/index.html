@@ -8,7 +8,6 @@
 
   <!-- Шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
-
   <!-- Стили -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -49,13 +48,33 @@
         <a class="btn-wb" href="https://www.wildberries.ru/seller/4233049" target="_blank" rel="noopener">
           Купить на Wildberries
         </a>
+
+        <!-- Бургер для мобилки -->
+        <button class="nav__burger" type="button" aria-label="Открыть меню">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </header>
 
+  <!-- Мобильное меню-оверлей -->
+  <div class="nav-overlay" id="nav-overlay">
+    <div class="nav-overlay__backdrop" data-nav-close></div>
+    <div class="nav-overlay__panel">
+      <button class="nav-overlay__close" type="button" aria-label="Закрыть меню" data-nav-close>×</button>
+      <nav class="nav-overlay__menu">
+        <a href="#benefits" data-nav-close>Коллекция</a>
+        <a href="#intro" data-nav-close>О бренде</a>
+        <a href="#faq" data-nav-close>FAQ</a>
+        <a href="#cta" data-nav-close>Контакты</a>
+        <a href="https://www.wildberries.ru/seller/4233049" target="_blank" rel="noopener">Купить на Wildberries</a>
+      </nav>
+    </div>
+  </div>
+
   <main class="page">
 
-    <!-- ======= HERO ======= -->
+    <!-- ======= HERO (на десктопе виден, на мобилке скрыт) ======= -->
     <section class="rm-hero" aria-label="Витрина CLOZ">
       <div class="rm-hero__slides"></div>
 
@@ -279,6 +298,7 @@
 
     (function heroInit(){
       const root   = document.querySelector('.rm-hero');
+      if (!root) return;
       const wrap   = root.querySelector('.rm-hero__slides');
       const dotsEl = root.querySelector('.rm-hero__dots');
       const title  = root.querySelector('#rm-hero-title');
@@ -322,8 +342,10 @@
         apply(index);
       }
 
-      root.querySelector('.rm-hero__next').onclick = () => go(index + 1);
-      root.querySelector('.rm-hero__prev').onclick = () => go(index - 1);
+      const next = root.querySelector('.rm-hero__next');
+      const prev = root.querySelector('.rm-hero__prev');
+      if (next) next.onclick = () => go(index + 1);
+      if (prev) prev.onclick = () => go(index - 1);
 
       setInterval(() => go(index + 1), 7000);
       apply(0);
@@ -386,6 +408,33 @@
       modal.querySelector('.modal__form').addEventListener('submit', e => {
         e.preventDefault();
         close();
+      });
+    })();
+
+    /* NAV: бургер и оверлей */
+    (function navOverlayInit(){
+      const burger  = document.querySelector('.nav__burger');
+      const overlay = document.getElementById('nav-overlay');
+      if (!burger || !overlay) return;
+
+      const closeTargets = overlay.querySelectorAll('[data-nav-close]');
+
+      function openNav(){
+        overlay.classList.add('is-open');
+        document.body.classList.add('nav-open');
+      }
+      function closeNav(){
+        overlay.classList.remove('is-open');
+        document.body.classList.remove('nav-open');
+      }
+
+      burger.addEventListener('click', openNav);
+      closeTargets.forEach(el => el.addEventListener('click', closeNav));
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')){
+          closeNav();
+        }
       });
     })();
   </script>

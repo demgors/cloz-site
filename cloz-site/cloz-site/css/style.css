@@ -96,14 +96,15 @@ a{ color:inherit; text-decoration:none }
 }
 .menu a:hover{ opacity:1; }
 
-/* Лого в стиле CLOZ */
 .logo {
+  justify-self:center;
   font-family: "Inter Tight", "Inter", system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0.12em;
   font-size: 20px;
   text-transform: uppercase;
 }
+
 .btn-wb{
   justify-self:end;
   padding:10px 16px;
@@ -119,28 +120,69 @@ a{ color:inherit; text-decoration:none }
   box-shadow:0 6px 16px rgba(0,0,0,.35);
 }
 
-/* Навбар — мобилка, минимальные правки без бургера */
+/* Бургер (десктоп — скрыт) */
+.nav__burger{
+  display:none;
+  width:32px;
+  height:32px;
+  border:none;
+  background:none;
+  padding:0;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+}
+.nav__burger span{
+  display:block;
+  width:20px;
+  height:2px;
+  border-radius:999px;
+  background:var(--text);
+}
+.nav__burger span+span{
+  margin-top:4px;
+}
+
+/* Навбар — мобилка */
 @media (max-width:768px){
   .nav__inner{
     height:64px;
-    grid-template-columns:auto 1fr;
+    display:flex;                 /* вместо grid */
+    align-items:center;
+    justify-content:space-between;
     gap:12px;
   }
+
   .menu{
-    gap:14px;
-    font-size:11px;
-    flex-wrap:nowrap;
-    overflow-x:auto;
-    scrollbar-width:none;
+    display:none;                 /* ссылки прячем — будут в бургер-меню */
   }
-  .menu::-webkit-scrollbar{ display:none; }
-  .logo{
-    font-size:16px;
-    letter-spacing:.14em;
-    justify-self:flex-end;
-  }
+
   .btn-wb{
     display:none;
+  }
+
+  .logo{
+    flex:1;
+    text-align:center;
+    font-size:16px;
+    letter-spacing:.14em;
+  }
+
+  .nav__burger{
+    display:flex;                 /* показываем иконку бургера */
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    width:32px;
+    height:32px;
+  }
+
+  .nav__burger span{
+    width:18px;
+    height:2px;
+    border-radius:999px;
+    background:var(--text);
+    margin:0;
   }
 }
 
@@ -208,24 +250,17 @@ a{ color:inherit; text-decoration:none }
   z-index:2;
   padding:clamp(48px,7vw,96px) 0;
 }
-
-/* ВАЖНО: новый гибкий layout для hero */
 .rm-hero__inner{
-  position: relative;
-  min-height: min(78vh, 860px);
-  display: flex;
-  align-items: center;       /* центр по вертикали */
-  justify-content: flex-end; /* текст прижат к правой части */
+  position:relative;
+  min-height:min(78vh,860px);
 }
 
-/* Текстовый блок hero — больше не absolute */
-.rm-hero__meta{
-  position: relative;
-  top: auto;
-  left: auto;
-  transform: none;
-  max-width: 420px;
-  margin-right: 8vw; /* отступ от правого края */
+/* ===== Центровка текста в hero ===== */
+.rm-hero__meta {
+  position: absolute;
+  top: 35%;
+  left: 72%;
+  transform: translate(-50%, -50%);
   text-align: center;
 }
 
@@ -239,10 +274,12 @@ a{ color:inherit; text-decoration:none }
   margin:0 0 10px;
   margin-inline:auto;
 }
-.rm-hero__sub{
-  margin:0 0 12px;
-  color:rgba(233,226,214,.78);
-  font-size:clamp(15px,1.8vw,17px);
+
+.rm-hero__sub,
+.rm-hero__desc{
+  text-align:center;
+  margin-left:auto;
+  margin-right:auto;
 }
 .rm-hero__desc{
   margin:0 0 24px;
@@ -251,8 +288,6 @@ a{ color:inherit; text-decoration:none }
   font-size:clamp(13px,1.3vw,15px);
   line-height:1.55;
 }
-
-/* Бейдж */
 .rm-hero__badge{
   position:absolute;
   bottom:3.5%;
@@ -326,8 +361,6 @@ a{ color:inherit; text-decoration:none }
   .rm-hero__inner{
     min-height:auto;
     padding-bottom:40px;
-
-    display:block;       /* возвращаем обычный flow */
   }
   .rm-hero__meta{
     position:relative;
@@ -336,7 +369,6 @@ a{ color:inherit; text-decoration:none }
     text-align:left;
     margin-top:24px;
     max-width:100%;
-    margin-right:0;
   }
   .rm-hero__title{
     text-align:left;
@@ -799,13 +831,5 @@ a{ color:inherit; text-decoration:none }
   [data-reveal]{
     transform:translateY(18px);
     transition-duration:.6s;
-  }
-}
-
-/* ===== Очень широкие экраны (чтобы всё не плывало) ===== */
-@media (min-width:1600px){
-  .page{
-    max-width:1500px;
-    margin:0 auto;
   }
 }
