@@ -24,14 +24,14 @@ body{
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   letter-spacing:.01em;
 }
-body.nav-open{
-  overflow:hidden;
-}
 a{ color:inherit; text-decoration:none }
 .container{ max-width:1450px; margin:0 auto; padding:0 12px; }
 .page{ min-height:60vh }
+body.nav-open{
+  overflow:hidden;
+}
 
-/* ===== Бегущая строка (аналог therapyclothes) ===== */
+/* ===== БЕГУЩАЯ СТРОКА ===== */
 .tc-marquee{
   width:100%;
   overflow:hidden;
@@ -44,7 +44,7 @@ a{ color:inherit; text-decoration:none }
   gap:32px;
   padding:8px 24px;
   white-space:nowrap;
-  font-family:"Inter", system-ui, sans-serif;
+  font-family:"Manrope", Inter, system-ui, sans-serif;
   font-weight:600;
   font-size:11px;
   letter-spacing:.16em;
@@ -83,7 +83,7 @@ a{ color:inherit; text-decoration:none }
 .nav__inner{
   height:72px;
   display:grid;
-  grid-template-columns:1fr auto 1fr;
+  grid-template-columns:1fr auto auto;
   align-items:center;
   gap:24px;
 }
@@ -98,14 +98,16 @@ a{ color:inherit; text-decoration:none }
   color:var(--text);
 }
 .menu a:hover{ opacity:1; }
+
 .logo{
   justify-self:center;
-  font-family: "Inter Tight", "Inter", system-ui, sans-serif;
+  font-family:"Inter Tight","Inter",system-ui,sans-serif;
   font-weight:500;
   letter-spacing:.12em;
   font-size:20px;
   text-transform:uppercase;
 }
+
 .btn-wb{
   justify-self:end;
   padding:10px 16px;
@@ -121,32 +123,45 @@ a{ color:inherit; text-decoration:none }
   box-shadow:0 6px 16px rgba(0,0,0,.35);
 }
 
-/* Бургер */
+/* Бургер (по умолчанию скрыт) */
 .nav__burger{
   display:none;
-  width:32px;
-  height:32px;
+  justify-self:end;
+  width:26px;
+  height:22px;
+  padding:0;
   border:none;
   background:none;
-  padding:0;
   cursor:pointer;
-  justify-self:end;
-  align-items:center;
-  justify-content:center;
+  position:relative;
 }
 .nav__burger span{
-  display:block;
-  width:18px;
+  position:absolute;
+  left:0;
+  right:0;
   height:2px;
   border-radius:999px;
   background:var(--text);
-  transition:transform .2s ease, opacity .2s ease;
+  transition:transform .2s ease, opacity .2s ease, top .2s ease, bottom .2s ease;
 }
-.nav__burger span+span{
-  margin-top:4px;
+.nav__burger span:nth-child(1){ top:4px; }
+.nav__burger span:nth-child(2){ top:10px; }
+.nav__burger span:nth-child(3){ bottom:4px; }
+
+/* анимация крестика */
+.nav__burger.is-open span:nth-child(1){
+  top:10px;
+  transform:rotate(45deg);
+}
+.nav__burger.is-open span:nth-child(2){
+  opacity:0;
+}
+.nav__burger.is-open span:nth-child(3){
+  bottom:10px;
+  transform:rotate(-45deg);
 }
 
-/* Навбар — мобилка */
+/* Мобильная шапка */
 @media (max-width:768px){
   .nav__inner{
     height:64px;
@@ -154,77 +169,58 @@ a{ color:inherit; text-decoration:none }
     gap:12px;
   }
   .menu{
-    display:none; /* убрали ссылки из шапки на мобилке */
+    display:none;
   }
   .btn-wb{
-    display:none; /* кнопку WB тоже убрали — она в меню бургера */
+    display:none;
   }
   .logo{
-    font-size:16px;
+    font-size:18px;
     letter-spacing:.14em;
-    justify-self:center; /* логотип строго по центру */
+    justify-self:center;
   }
   .nav__burger{
-    display:flex; /* показываем бургер справа */
+    display:block;
   }
 }
 
-/* ===== Мобильное меню-оверлей ===== */
-.nav-overlay{
+/* ===== Мобильное меню ===== */
+#nav-mobile{
   position:fixed;
-  inset:0;
-  display:flex;
-  justify-content:flex-end;
-  align-items:stretch;
-  background:rgba(0,0,0,.45);
-  backdrop-filter:blur(4px);
-  opacity:0;
-  visibility:hidden;
-  transition:opacity .25s ease, visibility .25s ease;
-  z-index:40;
-}
-.nav-overlay.is-open{
-  opacity:1;
-  visibility:visible;
-}
-.nav-overlay__backdrop{
-  flex:1;
-}
-.nav-overlay__panel{
-  width:260px;
-  max-width:80%;
-  background:#0D0C0B;
-  border-left:1px solid var(--line);
-  padding:20px 22px 28px;
-  display:flex;
+  top:0;
+  right:0;
+  bottom:0;
+  width:75%;
+  max-width:320px;
+  background:#050505;
+  padding:80px 24px 24px;
+  display:none;
   flex-direction:column;
+  gap:20px;
+  z-index:50;
+  box-shadow:-18px 0 40px rgba(0,0,0,.7);
 }
-.nav-overlay__close{
-  align-self:flex-end;
-  border:none;
-  background:none;
-  color:var(--muted);
-  font-size:24px;
-  cursor:pointer;
-  margin:-6px -4px 10px;
-}
-.nav-overlay__menu{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin-top:6px;
-}
-.nav-overlay__menu a{
-  font-size:14px;
+#nav-mobile a{
+  font-size:15px;
   text-transform:uppercase;
-  letter-spacing:.10em;
+  letter-spacing:.14em;
   color:var(--text);
 }
-.nav-overlay__menu a:last-child{
-  margin-top:10px;
-  font-size:13px;
-  opacity:.85;
+#nav-mobile a:hover{
+  color:var(--accent);
 }
+#nav-mobile.is-open{
+  display:flex;
+}
+
+/* на десктопе мобильное меню скрыто гарантированно */
+@media (min-width:769px){
+  #nav-mobile{
+    display:none !important;
+  }
+}
+
+/* затемнение фона можно имитировать через body.nav-open, если захочешь — добавим отдельный overlay */
 
 /* ===== Общая кнопка ===== */
 .btn{
@@ -295,20 +291,20 @@ a{ color:inherit; text-decoration:none }
   min-height:min(78vh,860px);
 }
 
-/* Центровка текста в hero */
-.rm-hero__meta{
-  position:absolute;
-  top:35%;
-  left:72%;
-  transform:translate(-50%, -50%);
-  text-align:center;
+.rm-hero__meta {
+  position: absolute;
+  top: 35%;
+  left: 72%;
+  transform: translate(-50%, -50%);
+  text-align: center;
 }
+
 .rm-hero__title{
-  font-family:"Inter Tight", "Inter", system-ui, sans-serif;
-  font-weight:500;
-  font-size:clamp(32px,4.9vw,48px);
+  font-family:"Cormorant Garamond", serif;
+  font-weight:600;
+  font-size:clamp(36px,4.9vw,56px);
   line-height:1.05;
-  letter-spacing:.08em;
+  letter-spacing:.01em;
   text-wrap:balance;
   margin:0 0 10px;
   margin-inline:auto;
@@ -318,11 +314,6 @@ a{ color:inherit; text-decoration:none }
   text-align:center;
   margin-left:auto;
   margin-right:auto;
-}
-.rm-hero__sub{
-  margin:0 0 12px;
-  color:rgba(233,226,214,.78);
-  font-size:clamp(15px,1.8vw,17px);
 }
 .rm-hero__desc{
   margin:0 0 24px;
@@ -387,7 +378,7 @@ a{ color:inherit; text-decoration:none }
   transform:scale(1.1);
 }
 
-/* HERO — мобилка: полностью скрываем */
+/* HERO — мобилка: прячем полностью */
 @media (max-width:768px){
   .rm-hero{
     display:none;
@@ -442,7 +433,7 @@ a{ color:inherit; text-decoration:none }
 }
 .intro__title{
   margin:0 0 12px;
-  font-family:"Inter", system-ui, sans-serif;
+  font-family:"Manrope", Inter, system-ui, sans-serif;
   font-size:clamp(26px,4.5vw,42px);
   font-weight:700;
   letter-spacing:.01em;
@@ -506,7 +497,7 @@ a{ color:inherit; text-decoration:none }
   font-size:18px;
   letter-spacing:.10em;
   text-transform:uppercase;
-  font-family:"Inter", system-ui, sans-serif;
+  font-family:"Manrope", Inter, system-ui, sans-serif;
 }
 .benefits__desc{
   margin:0;
@@ -550,7 +541,7 @@ a{ color:inherit; text-decoration:none }
 }
 .section__title{
   margin:0 0 20px;
-  font-family:"Inter", system-ui, sans-serif;
+  font-family:"Manrope", Inter, system-ui, sans-serif;
   letter-spacing:.06em;
   text-transform:uppercase;
   color:var(--muted);
@@ -641,7 +632,7 @@ a{ color:inherit; text-decoration:none }
 .cta__title{
   margin:0 0 10px;
   font-size:clamp(28px,5vw,44px);
-  font-family:"Inter", system-ui, sans-serif;
+  font-family:"Manrope", Inter, system-ui, sans-serif;
   font-weight:700;
 }
 .cta__text{

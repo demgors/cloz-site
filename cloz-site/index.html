@@ -8,7 +8,6 @@
 
   <!-- Шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
-  <!-- Стили -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -16,7 +15,7 @@
   <!-- ======= ХЕДЕР ======= -->
   <header class="site-header">
 
-    <!-- ======= БЕГУЩАЯ СТРОКА (аналог therapyclothes.ru) ======= -->
+    <!-- ======= БЕГУЩАЯ СТРОКА ======= -->
     <div class="tc-marquee" aria-label="Список ароматов CLOZ">
       <div class="tc-marquee__track">
         <span>BLACK PEPPER • AMBRA</span>
@@ -44,37 +43,35 @@
           <a href="#faq">FAQ</a>
           <a href="#cta">Контакты</a>
         </nav>
+
         <a href="#" class="logo">CLOZ</a>
+
         <a class="btn-wb" href="https://www.wildberries.ru/seller/4233049" target="_blank" rel="noopener">
           Купить на Wildberries
         </a>
 
-        <!-- Бургер для мобилки -->
-        <button class="nav__burger" type="button" aria-label="Открыть меню">
+        <!-- Кнопка бургера (мобилка) -->
+        <button class="nav__burger" type="button" aria-label="Открыть меню" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Мобильное меню-оверлей -->
-  <div class="nav-overlay" id="nav-overlay">
-    <div class="nav-overlay__backdrop" data-nav-close></div>
-    <div class="nav-overlay__panel">
-      <button class="nav-overlay__close" type="button" aria-label="Закрыть меню" data-nav-close>×</button>
-      <nav class="nav-overlay__menu">
-        <a href="#benefits" data-nav-close>Коллекция</a>
-        <a href="#intro" data-nav-close>О бренде</a>
-        <a href="#faq" data-nav-close>FAQ</a>
-        <a href="#cta" data-nav-close>Контакты</a>
-        <a href="https://www.wildberries.ru/seller/4233049" target="_blank" rel="noopener">Купить на Wildberries</a>
-      </nav>
-    </div>
-  </div>
+  <!-- Мобильное меню -->
+  <nav id="nav-mobile" aria-label="Мобильное меню">
+    <a href="#benefits">Коллекция</a>
+    <a href="#intro">О бренде</a>
+    <a href="#faq">FAQ</a>
+    <a href="#cta">Контакты</a>
+    <a href="https://www.wildberries.ru/seller/4233049" target="_blank" rel="noopener">
+      Купить на Wildberries
+    </a>
+  </nav>
 
   <main class="page">
 
-    <!-- ======= HERO (на десктопе виден, на мобилке скрыт) ======= -->
+    <!-- ======= HERO (на мобилке скрыт) ======= -->
     <section class="rm-hero" aria-label="Витрина CLOZ">
       <div class="rm-hero__slides"></div>
 
@@ -218,7 +215,7 @@
 
   </main>
 
-  <!-- ======= FOOTER (Политика) ======= -->
+  <!-- ======= FOOTER ======= -->
   <footer class="footer">
     <div class="container footer__inner">
       <a href="https://clozpro.ru/privacy" target="_blank" rel="noopener">
@@ -227,7 +224,7 @@
     </div>
   </footer>
 
-  <!-- ======= MODAL: ОБРАТНАЯ СВЯЗЬ ======= -->
+  <!-- ======= MODAL ======= -->
   <div class="modal" id="contact-modal" aria-hidden="true">
     <div class="modal__backdrop" data-modal-close></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -298,8 +295,9 @@
 
     (function heroInit(){
       const root   = document.querySelector('.rm-hero');
-      if (!root) return;
-      const wrap   = root.querySelector('.rm-hero__slides');
+      const wrap   = root?.querySelector('.rm-hero__slides');
+      if (!root || !wrap) return;
+
       const dotsEl = root.querySelector('.rm-hero__dots');
       const title  = root.querySelector('#rm-hero-title');
       const sub    = root.querySelector('#rm-hero-sub');
@@ -342,10 +340,8 @@
         apply(index);
       }
 
-      const next = root.querySelector('.rm-hero__next');
-      const prev = root.querySelector('.rm-hero__prev');
-      if (next) next.onclick = () => go(index + 1);
-      if (prev) prev.onclick = () => go(index - 1);
+      root.querySelector('.rm-hero__next').onclick = () => go(index + 1);
+      root.querySelector('.rm-hero__prev').onclick = () => go(index - 1);
 
       setInterval(() => go(index + 1), 7000);
       apply(0);
@@ -411,30 +407,26 @@
       });
     })();
 
-    /* NAV: бургер и оверлей */
-    (function navOverlayInit(){
-      const burger  = document.querySelector('.nav__burger');
-      const overlay = document.getElementById('nav-overlay');
-      if (!burger || !overlay) return;
+    /* BURGER + MOBILE NAV */
+    (function navMobileInit(){
+      const burger = document.querySelector('.nav__burger');
+      const panel  = document.getElementById('nav-mobile');
+      if (!burger || !panel) return;
 
-      const closeTargets = overlay.querySelectorAll('[data-nav-close]');
+      burger.addEventListener('click', () => {
+        const isOpen = panel.classList.toggle('is-open');
+        burger.classList.toggle('is-open', isOpen);
+        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        document.body.classList.toggle('nav-open', isOpen);
+      });
 
-      function openNav(){
-        overlay.classList.add('is-open');
-        document.body.classList.add('nav-open');
-      }
-      function closeNav(){
-        overlay.classList.remove('is-open');
-        document.body.classList.remove('nav-open');
-      }
-
-      burger.addEventListener('click', openNav);
-      closeTargets.forEach(el => el.addEventListener('click', closeNav));
-
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && overlay.classList.contains('is-open')){
-          closeNav();
-        }
+      panel.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          panel.classList.remove('is-open');
+          burger.classList.remove('is-open');
+          document.body.classList.remove('nav-open');
+          burger.setAttribute('aria-expanded','false');
+        });
       });
     })();
   </script>
